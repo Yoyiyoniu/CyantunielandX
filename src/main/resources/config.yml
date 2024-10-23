@@ -1,0 +1,3 @@
+regions: # On entering a region teleport there -> <regionName>[x,y,z]
+  survival: [ 20, 20, 20 ]
+  return-survival: [ 0, 0, 0 ]

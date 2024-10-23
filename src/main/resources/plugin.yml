@@ -1,0 +1,11 @@
+name: CyantunielandX
+version: '1.0'
+main: me.CyantunielandX.Main
+api-version: '1.21'
+authors: [ Rodrigo Gibran Felix Leon ]
+commands:
+  cyantunielandx:
+    description: Main command for CyantunielandX
+    aliases: cx
+    permission: cyantunielandx.command
+depend: [WorldGuard]
