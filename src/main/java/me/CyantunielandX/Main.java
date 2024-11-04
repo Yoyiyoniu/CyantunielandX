@@ -2,6 +2,7 @@ package me.CyantunielandX;
 
 import me.CyantunielandX.events.PlayerInStation;
 import me.CyantunielandX.utils.Prefix;
+import me.CyantunielandX.events.PlayerEnterPortalEvent;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -11,6 +12,7 @@ public final class Main extends JavaPlugin {
     @Override
     public void onEnable() {
         this.getServer().getPluginManager().registerEvents(new PlayerInStation(), this);
+        this.getServer().getPluginManager().registerEvents(new PlayerEnterPortalEvent(), this);
         this.saveDefaultConfig();
     }
 

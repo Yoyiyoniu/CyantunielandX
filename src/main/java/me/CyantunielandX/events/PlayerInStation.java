@@ -11,6 +11,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,23 +31,31 @@ public class PlayerInStation implements Listener {
             assert regions != null;
 
             for (String regionName : Objects.requireNonNull(this.main.getConfig().getConfigurationSection("regions")).getKeys(false)) {
-                ProtectedRegion region = regions.getRegion(regionName);
-                if (region != null && region.contains(p.getLocation().getBlockX(), p.getLocation().getBlockY(), p.getLocation().getBlockZ())) {
-                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "screeneffect fullscreen #0F0F11 10 10 10 nofreeze " + p.getName());
-                    this.blockPlayers.add(p);
-                    List<Integer> locs = this.main.getConfig().getIntegerList("regions." + regionName);
-                    double x = (double) locs.get(0);
-                    double y = (double) locs.get(1);
-                    double z = (double) locs.get(2);
-                    Location teleportLocation = new Location(p.getWorld(), x, y, z, p.getYaw(), p.getPitch());
-                    Bukkit.getScheduler().scheduleSyncDelayedTask(this.main, () -> {
-                        this.blockPlayers.remove(p);
-                        p.teleport(teleportLocation);
-                    }, 28L);
-                }
+                getRegion(p, regions, regionName, this.blockPlayers, this.main);
             }
 
         }
     }
 
+    private void getRegion(Player p, RegionManager regions, String regionName, List<Player> blockPlayers, Main main) {
+        ProtectedRegion region = regions.getRegion(regionName);
+
+        if (region != null && region.contains(p.getLocation().getBlockX(), p.getLocation().getBlockY(), p.getLocation().getBlockZ())) {
+            blockPlayers.add(p);
+            List<Integer> locs = main.getConfig().getIntegerList("regions." + regionName);
+            double x = (double) locs.get(0);
+            double y = (double) locs.get(1);
+            double z = (double) locs.get(2);
+
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "screeneffect fullscreen #0F0F11 10 10 10 nofreeze " + p.getName());
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    Location teleportLocation = new Location(p.getWorld(), x, y, z, p.getYaw(), p.getPitch());
+                    p.teleport(teleportLocation);
+                    blockPlayers.remove(p);
+                }
+            }.runTaskLater(main, 10L);
+        }
+    }
 }
