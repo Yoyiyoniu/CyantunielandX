@@ -6,6 +6,7 @@ import me.CyantunielandX.events.PlayerEnterPortalEvent;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.NotNull;
 
 public final class Main extends JavaPlugin {
 
@@ -13,6 +14,7 @@ public final class Main extends JavaPlugin {
     public void onEnable() {
         this.getServer().getPluginManager().registerEvents(new PlayerInStation(), this);
         this.getServer().getPluginManager().registerEvents(new PlayerEnterPortalEvent(), this);
+
         this.saveDefaultConfig();
     }
 
@@ -21,7 +23,7 @@ public final class Main extends JavaPlugin {
         // Plugin shutdown logic
     }
 
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+    public boolean onCommand(@NotNull CommandSender sender,@NotNull Command command, String label, String[] args) {
         if (label.equalsIgnoreCase("cyantunielandX") && args.length > 0 && args[0].equalsIgnoreCase("reload")) {
             if (sender.hasPermission("cyantunielandX.reload")) {
                 sender.sendMessage(Prefix.serverPrefix + " Recargando configuracion");
